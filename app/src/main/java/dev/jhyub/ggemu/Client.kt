@@ -1,6 +1,5 @@
 package dev.jhyub.ggemu
 
-import android.util.Log
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
@@ -36,9 +35,7 @@ class Client(val ip: String, val port: Int) {
                     specialMessageDeque.removeFirst()
                 }
 
-                Gyro.makeMessage()?.let {
-                    writeChannel?.writeMessage(it)
-                }
+                writeChannel?.writeMessage(Gyro.makeMessage())
                 delay(10L)
             }
         }
@@ -56,8 +53,8 @@ class Client(val ip: String, val port: Int) {
 suspend fun ByteWriteChannel.writeMessage(message: Message) {
     withContext(Dispatchers.IO) {
         writeInt(message.messageType.code)
-        writeFloat(message.x)
-        writeFloat(message.y)
-        writeFloat(message.z)
+        writeFloat(message.roll)
+        writeFloat(message.pitch)
+        writeFloat(message.yaw)
     }
 }
